@@ -62,6 +62,7 @@ import { computed, onMounted, ref } from "vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { RouterLink, useRoute } from "vue-router";
+import { useHead } from "@unhead/vue";
 import api from "../api";
 import { useAuthStore } from "../stores/auth";
 
@@ -75,6 +76,17 @@ const submitting = ref(false);
 const renderedContent = computed(() =>
   post.value ? DOMPurify.sanitize(marked.parse(post.value.content)) : ""
 );
+
+useHead({
+  title: computed(() => post.value ? `${post.value.title} | papobilou` : "papobilou"),
+  meta: computed(() => [
+    { name: "description", content: post.value?.excerpt ?? "" },
+    { property: "og:title", content: post.value?.title ?? "" },
+    { property: "og:description", content: post.value?.excerpt ?? "" },
+    { property: "og:type", content: "article" },
+    ...(post.value?.cover_image ? [{ property: "og:image", content: post.value.cover_image }] : []),
+  ]),
+});
 
 onMounted(async () => {
   try {

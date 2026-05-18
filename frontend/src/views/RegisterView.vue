@@ -40,7 +40,10 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
 import { useAuthStore } from "../stores/auth";
+
+useHead({ title: "Inscription | papobilou" });
 
 const router = useRouter();
 const auth = useAuthStore();

@@ -58,10 +58,15 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from "vue";
-import { ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
+import { useHead } from "@unhead/vue";
 import api from "../api";
+
+useHead({
+  title: "papobilou",
+  meta: [{ name: "description", content: "Le blog de papobilou — articles, tutoriels et pensées." }],
+});
 
 const route = useRoute();
 const router = useRouter();
