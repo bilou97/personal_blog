@@ -11,7 +11,7 @@
       {{ formatDate(post.published_at) }}
     </time>
 
-    <div class="prose dark:prose-invert max-w-none mb-12" v-html="post.content"></div>
+    <div class="prose dark:prose-invert max-w-none mb-12" v-html="renderedContent"></div>
 
     <section class="border-t border-gray-200 dark:border-gray-800 pt-8">
       <h2 class="text-xl font-semibold mb-6">Commentaires ({{ post.comments.length }})</h2>
@@ -58,7 +58,9 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 import { RouterLink, useRoute } from "vue-router";
 import api from "../api";
 import { useAuthStore } from "../stores/auth";
@@ -69,6 +71,10 @@ const post = ref(null);
 const loading = ref(true);
 const newComment = ref("");
 const submitting = ref(false);
+
+const renderedContent = computed(() =>
+  post.value ? DOMPurify.sanitize(marked.parse(post.value.content)) : ""
+);
 
 onMounted(async () => {
   try {
