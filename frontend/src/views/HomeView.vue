@@ -3,6 +3,7 @@
     <h1 class="text-3xl font-bold mb-8">Articles</h1>
     <p v-if="loading" class="text-gray-500 dark:text-gray-400">Chargement...</p>
     <p v-else-if="!posts.length" class="text-gray-500 dark:text-gray-400">Aucun article pour l'instant.</p>
+
     <div class="space-y-8">
       <article v-for="post in posts" :key="post.id" class="border-b border-gray-200 dark:border-gray-800 pb-8">
         <RouterLink :to="`/post/${post.slug}`" class="group block mb-2">
@@ -19,22 +20,87 @@
         <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{{ post.excerpt }}</p>
       </article>
     </div>
+
+    <nav v-if="totalPages > 1" class="flex items-center justify-center gap-1 mt-12">
+      <button
+        @click="goTo(page - 1)"
+        :disabled="page === 1"
+        class="px-3 py-1.5 rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+      >
+        ← Précédent
+      </button>
+
+      <template v-for="p in pageRange" :key="p">
+        <span v-if="p === '…'" class="px-2 text-gray-400 dark:text-gray-500 select-none">…</span>
+        <button
+          v-else
+          @click="goTo(p)"
+          :class="[
+            'w-8 h-8 rounded-lg text-sm font-medium transition-colors',
+            p === page
+              ? 'bg-indigo-600 text-white'
+              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+          ]"
+        >
+          {{ p }}
+        </button>
+      </template>
+
+      <button
+        @click="goTo(page + 1)"
+        :disabled="page === totalPages"
+        class="px-3 py-1.5 rounded-lg text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+      >
+        Suivant →
+      </button>
+    </nav>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { RouterLink } from "vue-router";
+import { computed, onMounted, ref, watch } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import api from "../api";
+
+const route = useRoute();
+const router = useRouter();
 
 const posts = ref([]);
 const loading = ref(true);
+const total = ref(0);
+const pageSize = 10;
 
-onMounted(async () => {
-  const { data } = await api.get("/posts");
-  posts.value = data;
-  loading.value = false;
+const page = computed(() => Number(route.query.page) || 1);
+const totalPages = computed(() => Math.ceil(total.value / pageSize));
+
+const pageRange = computed(() => {
+  const n = totalPages.value;
+  const cur = page.value;
+  if (n <= 7) return Array.from({ length: n }, (_, i) => i + 1);
+  const pages = new Set([1, n, cur, cur - 1, cur + 1].filter((p) => p >= 1 && p <= n));
+  const sorted = [...pages].sort((a, b) => a - b);
+  const result = [];
+  for (let i = 0; i < sorted.length; i++) {
+    if (i > 0 && sorted[i] - sorted[i - 1] > 1) result.push("…");
+    result.push(sorted[i]);
+  }
+  return result;
 });
+
+async function fetchPosts() {
+  loading.value = true;
+  const { data } = await api.get("/posts", { params: { page: page.value, page_size: pageSize } });
+  posts.value = data.results;
+  total.value = data.total;
+  loading.value = false;
+}
+
+function goTo(p) {
+  router.push({ query: { ...route.query, page: p } });
+}
+
+onMounted(fetchPosts);
+watch(page, fetchPosts);
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString("fr-CH");

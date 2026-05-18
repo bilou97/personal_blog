@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from blog.models import Category, Post, Tag
-from ..schemas.posts import CategoryOut, PostDetailOut, PostListOut, TagOut
+from ..schemas.posts import CategoryOut, PaginatedPostListOut, PostDetailOut, PostListOut, TagOut
 
 router = APIRouter()
 
@@ -23,20 +23,27 @@ def _serialize_post_list(post) -> PostListOut:
     )
 
 
-@router.get("", response_model=list[PostListOut])
+@router.get("", response_model=PaginatedPostListOut)
 def list_posts(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=50),
     category: Optional[str] = None,
     tag: Optional[str] = None,
 ):
-    qs = Post.objects.filter(published=True).select_related("category").prefetch_related("tags")
+    qs = (
+        Post.objects.filter(published=True)
+        .select_related("category")
+        .prefetch_related("tags")
+        .order_by("-published_at")
+    )
     if category:
         qs = qs.filter(category__slug=category)
     if tag:
         qs = qs.filter(tags__slug=tag)
+    total = qs.count()
     offset = (page - 1) * page_size
-    return [_serialize_post_list(p) for p in qs[offset : offset + page_size]]
+    results = [_serialize_post_list(p) for p in qs[offset : offset + page_size]]
+    return PaginatedPostListOut(total=total, page=page, page_size=page_size, results=results)
 
 
 @router.get("/categories", response_model=list[CategoryOut])

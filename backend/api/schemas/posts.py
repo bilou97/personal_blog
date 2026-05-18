@@ -31,3 +31,10 @@ class PostListOut(BaseModel):
 class PostDetailOut(PostListOut):
     content: str
     comments: list[CommentOut]
+
+
+class PaginatedPostListOut(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    results: list[PostListOut]
