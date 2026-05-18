@@ -75,6 +75,7 @@
     <main class="max-w-3xl mx-auto px-4 py-10">
       <RouterView />
     </main>
+    <ToastNotification />
   </div>
 </template>
 
@@ -82,6 +83,7 @@
 import { ref, computed, onMounted } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useAuthStore } from "./stores/auth";
+import ToastNotification from "./components/ToastNotification.vue";
 import api from "./api";
 
 const auth = useAuthStore();
