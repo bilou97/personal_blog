@@ -33,7 +33,7 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
-import { useHead } from "@unhead/vue";
+import { useHead } from "../composables/useHead";
 import { useAuthStore } from "../stores/auth";
 
 useHead({ title: "Connexion | papobilou" });

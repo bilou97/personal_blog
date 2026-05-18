@@ -60,7 +60,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
-import { useHead } from "@unhead/vue";
+import { useHead } from "../composables/useHead";
 import api from "../api";
 
 useHead({

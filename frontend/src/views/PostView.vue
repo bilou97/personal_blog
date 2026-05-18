@@ -62,7 +62,7 @@ import { computed, onMounted, ref } from "vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { RouterLink, useRoute } from "vue-router";
-import { useHead } from "@unhead/vue";
+import { useHead } from "../composables/useHead";
 import api from "../api";
 import { useAuthStore } from "../stores/auth";
 
