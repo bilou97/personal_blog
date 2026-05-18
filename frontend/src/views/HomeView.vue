@@ -58,7 +58,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import api from "../api";
 
@@ -89,7 +90,10 @@ const pageRange = computed(() => {
 
 async function fetchPosts() {
   loading.value = true;
-  const { data } = await api.get("/posts", { params: { page: page.value, page_size: pageSize } });
+  const params = { page: page.value, page_size: pageSize };
+  if (route.query.category) params.category = route.query.category;
+  if (route.query.tag) params.tag = route.query.tag;
+  const { data } = await api.get("/posts", { params });
   posts.value = data.results;
   total.value = data.total;
   loading.value = false;
@@ -100,7 +104,7 @@ function goTo(p) {
 }
 
 onMounted(fetchPosts);
-watch(page, fetchPosts);
+watch(() => [route.query.page, route.query.category, route.query.tag], fetchPosts);
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString("fr-CH");

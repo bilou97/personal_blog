@@ -34,7 +34,44 @@
           </button>
         </div>
       </div>
+
+      <div
+        v-if="route.path === '/' && (categories.length || tags.length)"
+        class="max-w-3xl mx-auto px-4 pb-2 flex flex-wrap gap-1.5 text-xs"
+      >
+        <RouterLink
+          to="/"
+          :class="filterChipClass(!activeCategory && !activeTag)"
+        >
+          Tous
+        </RouterLink>
+
+        <template v-if="categories.length">
+          <span class="text-gray-300 dark:text-gray-700 select-none">|</span>
+          <RouterLink
+            v-for="cat in categories"
+            :key="cat.slug"
+            :to="{ path: '/', query: { category: cat.slug } }"
+            :class="filterChipClass(activeCategory === cat.slug)"
+          >
+            {{ cat.name }}
+          </RouterLink>
+        </template>
+
+        <template v-if="tags.length">
+          <span class="text-gray-300 dark:text-gray-700 select-none">|</span>
+          <RouterLink
+            v-for="tag in tags"
+            :key="tag.slug"
+            :to="{ path: '/', query: { tag: tag.slug } }"
+            :class="filterChipClass(activeTag === tag.slug)"
+          >
+            #{{ tag.name }}
+          </RouterLink>
+        </template>
+      </div>
     </nav>
+
     <main class="max-w-3xl mx-auto px-4 py-10">
       <RouterView />
     </main>
@@ -42,16 +79,38 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { RouterLink, RouterView } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useAuthStore } from "./stores/auth";
+import api from "./api";
 
 const auth = useAuthStore();
+const route = useRoute();
 const dark = ref(false);
+const categories = ref([]);
+const tags = ref([]);
 
-onMounted(() => {
+const activeCategory = computed(() => route.query.category ?? null);
+const activeTag = computed(() => route.query.tag ?? null);
+
+function filterChipClass(active) {
+  return [
+    "px-2.5 py-1 rounded-full font-medium transition-colors",
+    active
+      ? "bg-indigo-600 text-white"
+      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
+  ];
+}
+
+onMounted(async () => {
   dark.value = localStorage.getItem("dark") === "true";
   applyDark();
+  const [catsRes, tagsRes] = await Promise.all([
+    api.get("/posts/categories"),
+    api.get("/posts/tags"),
+  ]);
+  categories.value = catsRes.data;
+  tags.value = tagsRes.data;
 });
 
 function toggleDark() {
