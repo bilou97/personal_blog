@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.pyo
+
+# Django
+*.sqlite3
+/backend/staticfiles/
+/backend/media/
+
+# Node
+node_modules/
+dist/
+.cache/
+*.local
+
+# Docker / Env
+.env
+*.env.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Let's Encrypt (générés à la volée sur la VM)
+nginx/certbot/
