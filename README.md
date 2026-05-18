@@ -170,6 +170,22 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
 ---
 
+## Tests backend
+
+Les tests utilisent pytest + pytest-django et tournent contre la base PostgreSQL du conteneur.
+
+```bash
+# Installer les dépendances de test (première fois)
+docker compose exec backend pip install pytest pytest-django httpx
+
+# Lancer les tests
+docker compose exec backend pytest tests/ -v
+```
+
+La base de test (`test_blog`) est réutilisée entre les runs grâce à `--reuse-db` dans `pytest.ini`.
+
+---
+
 ## Modèles de données
 
 ### Post
@@ -209,14 +225,24 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
 Paramètres de liste : `?page=1&page_size=10&category=<slug>&tag=<slug>`
 
+Réponse de `GET /api/posts` :
+```json
+{
+  "total": 42,
+  "page": 1,
+  "page_size": 10,
+  "results": [...]
+}
+```
+
 ---
 
 ## Prochaines étapes
 
-- [ ] Ajouter du style (Tailwind CSS ou similaire)
-- [ ] Rendu Markdown dans les articles (`marked` ou `markdown-it`)
-- [ ] Pagination UI dans HomeView
-- [ ] Filtres par catégorie et tag dans la navbar
-- [ ] SEO : balises meta dynamiques (vue-meta ou `useHead`)
-- [ ] Gestion des erreurs globale (intercepteur axios)
-- [ ] Tests backend (pytest + pytest-django)
+- [x] Ajouter du style (Tailwind CSS v3 + plugin typography, dark mode toggle)
+- [x] Rendu Markdown dans les articles (`marked` + `DOMPurify`)
+- [x] Pagination UI dans HomeView (barre de pages avec ellipses, `?page=N` dans l'URL)
+- [x] Filtres par catégorie et tag dans la navbar (chips, `?category=` / `?tag=`)
+- [x] SEO : balises meta dynamiques (composable local `useHead`, og: pour les articles)
+- [x] Gestion des erreurs globale (intercepteur axios, toasts, logout auto sur 401)
+- [ ] Tests backend (pytest + pytest-django) — infrastructure en place, en cours de validation
