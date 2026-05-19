@@ -245,4 +245,4 @@ Réponse de `GET /api/posts` :
 - [x] Filtres par catégorie et tag dans la navbar (chips, `?category=` / `?tag=`)
 - [x] SEO : balises meta dynamiques (composable local `useHead`, og: pour les articles)
 - [x] Gestion des erreurs globale (intercepteur axios, toasts, logout auto sur 401)
-- [ ] Tests backend (pytest + pytest-django) — infrastructure en place, en cours de validation
+- [x] Tests backend (pytest + pytest-django) — 21 tests, isolation transactionnelle (`transactional_db`)
