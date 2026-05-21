@@ -43,6 +43,17 @@ Fonctionnalités réalisées et à venir.
 - [ ] **RSS feed** — `/feed.xml` listant les derniers articles publiés
 - [ ] **Sitemap XML** — `/sitemap.xml` pour le SEO, mis à jour à chaque publication
 
+### Style & UX
+
+- [ ] **Syntax highlighting** — coloration des blocs de code dans les articles (Shiki ou Highlight.js), avec bouton copier
+- [ ] **Skeleton loaders** — placeholders animés pendant le chargement des listes et articles, à la place des spinners
+- [ ] **Transitions de pages** — animation fluide entre les vues Vue Router (fade ou slide)
+- [ ] **Typographie affinée** — choix de polices (serif pour le contenu, sans-serif pour l'UI), line-height et tailles optimisés pour la lecture longue
+- [ ] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
+- [ ] **Page 404 personnalisée** — page d'erreur stylisée avec lien de retour
+- [ ] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
+- [ ] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
+
 ### Technique
 
 - [ ] **Cache Redis** — mise en cache des endpoints `/api/posts` et `/api/posts/{slug}`, invalidation à la publication
