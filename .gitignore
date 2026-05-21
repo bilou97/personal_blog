@@ -30,3 +30,6 @@ dist/
 
 # Let's Encrypt (générés à la volée sur la VM)
 nginx/certbot/
+
+.local.secret
+
