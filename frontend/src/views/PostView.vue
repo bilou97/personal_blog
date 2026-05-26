@@ -7,11 +7,37 @@
       class="w-full rounded-lg mb-8 object-cover max-h-72"
     />
     <h1 class="text-3xl font-bold mb-2">{{ post.title }}</h1>
-    <time v-if="post.published_at" class="text-sm text-gray-500 dark:text-gray-400 block mb-8">
-      {{ formatDate(post.published_at) }}
-    </time>
+    <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-8">
+      <time v-if="post.published_at">{{ formatDate(post.published_at) }}</time>
+      <span v-if="post.published_at && minutes" class="select-none">·</span>
+      <span v-if="minutes">{{ minutes }} min de lecture</span>
+    </div>
 
-    <div class="prose dark:prose-invert max-w-none mb-12" v-html="renderedContent"></div>
+    <!-- Table des matières -->
+    <nav
+      v-if="toc.length"
+      class="mb-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 text-sm"
+    >
+      <p class="font-semibold mb-2 text-gray-700 dark:text-gray-300">Dans cet article</p>
+      <ul class="space-y-1">
+        <li
+          v-for="item in toc"
+          :key="item.id"
+          :class="item.depth === 3 ? 'ml-4' : ''"
+        >
+          <a
+            :href="`#${item.id}`"
+            class="text-indigo-600 dark:text-indigo-400 hover:underline"
+          >{{ item.text }}</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div
+      ref="contentRef"
+      class="prose dark:prose-invert max-w-none mb-12"
+      v-html="html"
+    ></div>
 
     <section class="border-t border-gray-200 dark:border-gray-800 pt-8">
       <h2 class="text-xl font-semibold mb-6">Commentaires ({{ post.comments.length }})</h2>
@@ -58,11 +84,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { useHead } from "../composables/useHead";
+import { parseMarkdown } from "../composables/useMarkdown";
+import { readingTime } from "../composables/useReadingTime";
 import api from "../api";
 import { useAuthStore } from "../stores/auth";
 
@@ -72,10 +98,14 @@ const post = ref(null);
 const loading = ref(true);
 const newComment = ref("");
 const submitting = ref(false);
+const contentRef = ref(null);
 
-const renderedContent = computed(() =>
-  post.value ? DOMPurify.sanitize(marked.parse(post.value.content)) : ""
+const parsed = computed(() =>
+  post.value ? parseMarkdown(post.value.content) : { html: "", toc: [] }
 );
+const html = computed(() => parsed.value.html);
+const toc = computed(() => parsed.value.toc);
+const minutes = computed(() => post.value ? readingTime(post.value.content) : 0);
 
 useHead({
   title: computed(() => post.value ? `${post.value.title} | papobilou` : "papobilou"),
@@ -86,6 +116,26 @@ useHead({
     { property: "og:type", content: "article" },
     ...(post.value?.cover_image ? [{ property: "og:image", content: post.value.cover_image }] : []),
   ]),
+});
+
+watch(html, async () => {
+  await nextTick();
+  contentRef.value?.querySelectorAll("pre.hljs-pre").forEach((pre) => {
+    if (pre.querySelector(".copy-btn")) return;
+    const code = pre.querySelector("code");
+    if (!code) return;
+    const btn = document.createElement("button");
+    btn.textContent = "Copier";
+    btn.className =
+      "copy-btn absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-xs px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-200 transition-opacity";
+    btn.addEventListener("click", () => {
+      navigator.clipboard.writeText(code.textContent ?? "");
+      btn.textContent = "Copié !";
+      setTimeout(() => { btn.textContent = "Copier"; }, 2000);
+    });
+    pre.classList.add("relative", "group");
+    pre.appendChild(btn);
+  });
 });
 
 onMounted(async () => {

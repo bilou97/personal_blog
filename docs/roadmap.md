@@ -22,13 +22,13 @@ Fonctionnalités réalisées et à venir.
 
 ### Lecture & découverte
 
-- [ ] **Temps de lecture estimé** — calculé depuis la longueur du contenu, affiché sur la carte et dans l'article
+- [x] **Temps de lecture estimé** — calculé depuis le contenu, affiché dans l'article
 - [ ] **Articles liés** — 3 suggestions basées sur les tags/catégorie communs, affichées en bas d'article
 - [ ] **Recherche full-text** — endpoint `/api/search?q=` avec index GIN PostgreSQL, page de résultats côté frontend
 
 ### Contenu & écriture
 
-- [ ] **Table des matières** — générée automatiquement depuis les titres `##` du markdown, sticky sur desktop
+- [x] **Table des matières** — générée automatiquement depuis les titres `##` du markdown, affichée en haut d'article
 - [ ] **Upload d'images** — interface d'upload dans l'admin avec redimensionnement automatique (Pillow)
 - [ ] **Planification de publication** — champ `publish_at` côté admin, tâche Celery ou cron qui publie automatiquement
 
@@ -45,12 +45,12 @@ Fonctionnalités réalisées et à venir.
 
 ### Style & UX
 
-- [ ] **Syntax highlighting** — coloration des blocs de code dans les articles (Shiki ou Highlight.js), avec bouton copier
+- [x] **Syntax highlighting** — coloration des blocs de code dans les articles (Highlight.js), avec bouton copier
+- [x] **Transitions de pages** — animation fade entre les vues Vue Router
+- [x] **Page 404 personnalisée** — page d'erreur stylisée avec lien de retour
 - [ ] **Skeleton loaders** — placeholders animés pendant le chargement des listes et articles, à la place des spinners
-- [ ] **Transitions de pages** — animation fluide entre les vues Vue Router (fade ou slide)
 - [ ] **Typographie affinée** — choix de polices (serif pour le contenu, sans-serif pour l'UI), line-height et tailles optimisés pour la lecture longue
 - [ ] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
-- [ ] **Page 404 personnalisée** — page d'erreur stylisée avec lien de retour
 - [ ] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
 - [ ] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
 

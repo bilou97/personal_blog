@@ -73,7 +73,11 @@
     </nav>
 
     <main class="max-w-3xl mx-auto px-4 py-10">
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <Transition name="fade" mode="out-in">
+          <component :is="Component" :key="$route.fullPath" />
+        </Transition>
+      </RouterView>
     </main>
     <ToastNotification />
   </div>
