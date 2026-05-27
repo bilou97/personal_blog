@@ -24,17 +24,17 @@ Fonctionnalités réalisées et à venir.
 
 - [x] **Temps de lecture estimé** — calculé depuis le contenu, affiché dans l'article
 - [x] **Articles liés** — 3 suggestions basées sur les tags/catégorie communs, affichées en bas d'article
-- [ ] **Recherche full-text** — endpoint `/api/search?q=` avec index GIN PostgreSQL, page de résultats côté frontend
+- [x] **Recherche full-text** — endpoint `/api/search?q=` avec index GIN PostgreSQL, page de résultats côté frontend
 
 ### Contenu & écriture
 
 - [x] **Table des matières** — générée automatiquement depuis les titres `##` du markdown, affichée en haut d'article
-- [ ] **Upload d'images** — interface d'upload dans l'admin avec redimensionnement automatique (Pillow)
-- [ ] **Planification de publication** — champ `publish_at` côté admin, tâche Celery ou cron qui publie automatiquement
+- [x] **Upload d'images** — interface d'upload dans l'admin avec redimensionnement automatique (Pillow)
+- [x] **Planification de publication** — champ `publish_at` côté admin, tâche Celery ou cron qui publie automatiquement
 
 ### Engagement
 
-- [ ] **Réactions** — 3 emojis (👍 ❤️ 🔥) sans compte requis, stockées par article + IP/session
+- [x] **Réactions** — 3 emojis (👍 ❤️ 🔥) sans compte requis, stockées par article + IP/session
 - [x] **Compteur de vues** — incrémenté à chaque visite d'article, affiché publiquement
 - [ ] **Newsletter** — inscription par email, envoi automatique à la publication d'un article
 
@@ -57,6 +57,6 @@ Fonctionnalités réalisées et à venir.
 ### Technique
 
 - [x] **Cache Redis** — mise en cache des endpoints `/api/posts` et `/api/posts/{slug}`, invalidation à la publication
-- [ ] **Prévisualisation brouillon** — lien temporaire signé permettant de voir un article non publié
+- [x] **Prévisualisation brouillon** — lien temporaire signé permettant de voir un article non publié
 - [x] **Mode sombre** — toggle persisté dans localStorage, respecte la préférence système par défaut
 - [x] **Refresh token** — renouvellement silencieux du JWT sans déconnecter l'utilisateur
