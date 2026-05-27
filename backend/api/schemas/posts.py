@@ -26,6 +26,7 @@ class PostListOut(BaseModel):
     category: Optional[CategoryOut]
     tags: list[TagOut]
     published_at: Optional[datetime]
+    views: int = 0
 
 
 class PostDetailOut(PostListOut):

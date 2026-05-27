@@ -23,7 +23,7 @@ Fonctionnalités réalisées et à venir.
 ### Lecture & découverte
 
 - [x] **Temps de lecture estimé** — calculé depuis le contenu, affiché dans l'article
-- [ ] **Articles liés** — 3 suggestions basées sur les tags/catégorie communs, affichées en bas d'article
+- [x] **Articles liés** — 3 suggestions basées sur les tags/catégorie communs, affichées en bas d'article
 - [ ] **Recherche full-text** — endpoint `/api/search?q=` avec index GIN PostgreSQL, page de résultats côté frontend
 
 ### Contenu & écriture
@@ -35,13 +35,13 @@ Fonctionnalités réalisées et à venir.
 ### Engagement
 
 - [ ] **Réactions** — 3 emojis (👍 ❤️ 🔥) sans compte requis, stockées par article + IP/session
-- [ ] **Compteur de vues** — incrémenté à chaque visite d'article, affiché publiquement
+- [x] **Compteur de vues** — incrémenté à chaque visite d'article, affiché publiquement
 - [ ] **Newsletter** — inscription par email, envoi automatique à la publication d'un article
 
 ### Distribution
 
-- [ ] **RSS feed** — `/feed.xml` listant les derniers articles publiés
-- [ ] **Sitemap XML** — `/sitemap.xml` pour le SEO, mis à jour à chaque publication
+- [x] **RSS feed** — `/feed.xml` listant les derniers articles publiés
+- [x] **Sitemap XML** — `/sitemap.xml` pour le SEO, mis à jour à chaque publication
 
 ### Style & UX
 

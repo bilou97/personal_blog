@@ -10,12 +10,15 @@ from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 _django_app = get_asgi_application()
 
+_FASTAPI_PATHS = {
+    "/openapi.json", "/docs", "/redoc", "/feed.xml", "/sitemap.xml"
+}
+
 
 async def _application(scope, receive, send):
     path = scope.get("path", "")
     if scope["type"] == "http" and (
-        path.startswith("/api/")
-        or path in ("/openapi.json", "/docs", "/redoc")
+        path.startswith("/api/") or path in _FASTAPI_PATHS
     ):
         await fastapi_app(scope, receive, send)
     else:

@@ -11,6 +11,8 @@
       <time v-if="post.published_at">{{ formatDate(post.published_at) }}</time>
       <span v-if="post.published_at && minutes" class="select-none">·</span>
       <span v-if="minutes">{{ minutes }} min de lecture</span>
+      <span v-if="minutes && post.views" class="select-none">·</span>
+      <span v-if="post.views">{{ post.views }} {{ post.views === 1 ? 'vue' : 'vues' }}</span>
     </div>
 
     <!-- Table des matières -->
@@ -38,6 +40,24 @@
       class="prose dark:prose-invert max-w-none mb-12"
       v-html="html"
     ></div>
+
+    <!-- Articles liés -->
+    <section v-if="related.length" class="border-t border-gray-200 dark:border-gray-800 pt-8 mb-8">
+      <h2 class="text-lg font-semibold mb-4">Articles liés</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <RouterLink
+          v-for="item in related"
+          :key="item.slug"
+          :to="`/posts/${item.slug}`"
+          class="group block rounded-lg border border-gray-200 dark:border-gray-800 p-4 hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+        >
+          <p class="text-sm font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 leading-snug mb-1">
+            {{ item.title }}
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{{ item.excerpt }}</p>
+        </RouterLink>
+      </div>
+    </section>
 
     <section class="border-t border-gray-200 dark:border-gray-800 pt-8">
       <h2 class="text-xl font-semibold mb-6">Commentaires ({{ post.comments.length }})</h2>
@@ -95,6 +115,7 @@ import { useAuthStore } from "../stores/auth";
 const route = useRoute();
 const auth = useAuthStore();
 const post = ref(null);
+const related = ref([]);
 const loading = ref(true);
 const newComment = ref("");
 const submitting = ref(false);
@@ -122,6 +143,9 @@ onMounted(async () => {
   try {
     const { data } = await api.get(`/posts/${route.params.slug}`);
     post.value = data;
+    api.get(`/posts/${route.params.slug}/related`)
+      .then(({ data: rel }) => { related.value = rel; })
+      .catch(() => {});
   } finally {
     loading.value = false;
   }
