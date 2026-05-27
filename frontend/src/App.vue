@@ -107,7 +107,7 @@
       <!-- Filtres catégories / tags -->
       <div
         v-if="route.path === '/' && (categories.length || tags.length)"
-        class="max-w-3xl mx-auto px-4 pb-2 flex gap-1.5 text-xs overflow-x-auto scrollbar-none"
+        class="max-w-3xl mx-auto px-4 pb-2 flex flex-wrap gap-1.5 text-xs"
       >
         <RouterLink to="/" :class="filterChipClass(!activeCategory && !activeTag)" class="shrink-0">
           Tous
