@@ -35,11 +35,14 @@ async def lifespan(app: FastAPI):
     yield
 
 
+_debug = django_settings.DEBUG
+
 app = FastAPI(
     title="Blog API",
     version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url="/docs" if _debug else None,
+    redoc_url="/redoc" if _debug else None,
+    openapi_url="/openapi.json" if _debug else None,
     lifespan=lifespan,
 )
 
