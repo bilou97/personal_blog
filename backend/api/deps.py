@@ -21,30 +21,68 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 
 def create_access_token(user_id: int) -> str:
-    expire = datetime.now(timezone.utc) + timedelta(minutes=django_settings.JWT_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=django_settings.JWT_EXPIRE_MINUTES
+    )
     return jwt.encode(
-        {"sub": str(user_id), "exp": expire},
+        {"sub": str(user_id), "exp": expire, "type": "access"},
         django_settings.JWT_SECRET_KEY,
         algorithm=django_settings.JWT_ALGORITHM,
     )
+
+
+def create_refresh_token(user_id: int) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(
+        days=django_settings.JWT_REFRESH_EXPIRE_DAYS
+    )
+    return jwt.encode(
+        {"sub": str(user_id), "exp": expire, "type": "refresh"},
+        django_settings.JWT_SECRET_KEY,
+        algorithm=django_settings.JWT_ALGORITHM,
+    )
+
+
+def verify_refresh_token(token: str) -> int:
+    try:
+        payload = jwt.decode(
+            token,
+            django_settings.JWT_SECRET_KEY,
+            algorithms=[django_settings.JWT_ALGORITHM],
+        )
+        if payload.get("type") != "refresh":
+            raise ValueError
+        return int(payload["sub"])
+    except (JWTError, KeyError, ValueError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token",
+        )
 
 
 def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
 ) -> User:
     if not credentials:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
     try:
         payload = jwt.decode(
             credentials.credentials,
             django_settings.JWT_SECRET_KEY,
             algorithms=[django_settings.JWT_ALGORITHM],
         )
+        if payload.get("type") != "access":
+            raise ValueError
         user_id = int(payload["sub"])
     except (JWTError, KeyError, ValueError):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
 
     try:
         return User.objects.get(pk=user_id, is_active=True)
     except User.DoesNotExist:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
+        )

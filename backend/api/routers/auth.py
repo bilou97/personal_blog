@@ -1,10 +1,23 @@
 from fastapi import APIRouter, HTTPException, status
 from django.contrib.auth.models import User
 
-from ..deps import create_access_token, hash_password, verify_password
-from ..schemas.auth import LoginRequest, RegisterRequest, TokenOut
+from ..deps import (
+    create_access_token,
+    create_refresh_token,
+    hash_password,
+    verify_password,
+    verify_refresh_token,
+)
+from ..schemas.auth import LoginRequest, RefreshRequest, RegisterRequest, TokenOut
 
 router = APIRouter()
+
+
+def _token_pair(user_id: int) -> TokenOut:
+    return TokenOut(
+        access_token=create_access_token(user_id),
+        refresh_token=create_refresh_token(user_id),
+    )
 
 
 @router.post("/register", response_model=TokenOut, status_code=status.HTTP_201_CREATED)
@@ -18,7 +31,7 @@ def register(data: RegisterRequest):
         email=data.email,
         password=hash_password(data.password),
     )
-    return TokenOut(access_token=create_access_token(user.pk))
+    return _token_pair(user.pk)
 
 
 @router.post("/login", response_model=TokenOut)
@@ -29,4 +42,14 @@ def login(data: LoginRequest):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     if not verify_password(data.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return TokenOut(access_token=create_access_token(user.pk))
+    return _token_pair(user.pk)
+
+
+@router.post("/refresh", response_model=TokenOut)
+def refresh(data: RefreshRequest):
+    user_id = verify_refresh_token(data.refresh_token)
+    try:
+        User.objects.get(pk=user_id, is_active=True)
+    except User.DoesNotExist:
+        raise HTTPException(status_code=401, detail="User not found")
+    return _token_pair(user_id)

@@ -13,12 +13,29 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     const status = error.response?.status;
     const notifications = useNotificationsStore();
+    const auth = useAuthStore();
 
-    if (status === 401) {
-      const auth = useAuthStore();
+    if (status === 401 && !error.config._retry) {
+      const isRefreshEndpoint = error.config.url.includes("/auth/refresh");
+      const refreshToken = localStorage.getItem("refresh_token");
+
+      if (!isRefreshEndpoint && refreshToken) {
+        error.config._retry = true;
+        try {
+          const { data } = await api.post("/auth/refresh", {
+            refresh_token: refreshToken,
+          });
+          auth.setTokens(data.access_token, data.refresh_token);
+          error.config.headers.Authorization = `Bearer ${data.access_token}`;
+          return api(error.config);
+        } catch {
+          // refresh failed — déconnexion
+        }
+      }
+
       auth.logout();
       const path = router.currentRoute.value.path;
       if (path !== "/login" && path !== "/register") {
