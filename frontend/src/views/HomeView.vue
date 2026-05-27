@@ -1,11 +1,30 @@
 <template>
   <div>
     <h1 class="text-3xl font-bold mb-8">Articles</h1>
-    <p v-if="loading" class="text-gray-500 dark:text-gray-400">Chargement...</p>
-    <p v-else-if="!posts.length" class="text-gray-500 dark:text-gray-400">Aucun article pour l'instant.</p>
+    <p v-if="!loading && !posts.length" class="text-gray-500 dark:text-gray-400">Aucun article pour l'instant.</p>
 
     <div class="space-y-8">
-      <article v-for="post in posts" :key="post.id" class="border-b border-gray-200 dark:border-gray-800 pb-8">
+      <!-- Skeleton loaders -->
+      <template v-if="loading">
+        <div
+          v-for="n in 5"
+          :key="n"
+          class="border-b border-gray-200 dark:border-gray-800 pb-8 animate-pulse"
+        >
+          <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mb-3"></div>
+          <div class="flex gap-3 mb-3">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
+          </div>
+          <div class="space-y-2">
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+          </div>
+        </div>
+      </template>
+
+      <article v-else v-for="post in posts" :key="post.id" class="border-b border-gray-200 dark:border-gray-800 pb-8">
         <RouterLink :to="`/post/${post.slug}`" class="group block mb-2">
           <h2 class="text-xl font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
             {{ post.title }}

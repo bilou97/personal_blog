@@ -99,7 +99,23 @@
       </p>
     </section>
   </article>
-  <p v-else-if="loading" class="text-gray-500 dark:text-gray-400">Chargement...</p>
+  <div v-else-if="loading" class="animate-pulse">
+    <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+    <div class="flex gap-3 mb-8">
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
+    </div>
+    <div class="space-y-3 mb-6">
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+    </div>
+    <div class="h-32 bg-gray-200 dark:bg-gray-700 rounded mb-6"></div>
+    <div class="space-y-3">
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+    </div>
+  </div>
   <p v-else class="text-gray-500 dark:text-gray-400">Article introuvable.</p>
 </template>
 
