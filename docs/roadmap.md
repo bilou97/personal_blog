@@ -31,7 +31,7 @@ Fonctionnalités réalisées et à venir.
 - [x] **Table des matières** — générée automatiquement depuis les titres `##` du markdown, affichée en haut d'article
 - [x] **Upload d'images** — interface d'upload dans l'admin avec redimensionnement automatique (Pillow)
 - [x] **Planification de publication** — champ `publish_at` côté admin, tâche Celery ou cron qui publie automatiquement
-- [ ] **Éditeur Markdown dans l'admin** — éditeur avec prévisualisation en temps réel (split-pane ou onglets) dans l'interface Django admin, remplace le textarea brut
+- [x] **Éditeur Markdown dans l'admin** — éditeur Toast UI avec prévisualisation split-pane dans l'interface Django admin, remplace le textarea brut
 
 ### Engagement
 
@@ -57,7 +57,7 @@ Fonctionnalités réalisées et à venir.
 - [x] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
 - [x] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
 - [x] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
-- [x] **Section de présentation** — bloc en haut de la home décrivant le blog, les objectifs et la démarche de l'auteur
+- [x] **Section de présentation** — bloc en haut de la home, contenu Markdown stocké en base (modèle SiteConfig singleton), éditable depuis l'admin
 - [ ] **Sidebar contextuelle** — colonne latérale (home + articles) avec : archives par mois, champ de recherche, nuage de tags, articles populaires ; repliée sous le contenu sur mobile
 - [ ] **Barre de progression de lecture** — indicateur de progression en haut de l'écran lors de la lecture d'un article
 
