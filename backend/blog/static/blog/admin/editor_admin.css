@@ -1,0 +1,115 @@
+/* ── Largeur : l'éditeur occupe toute la ligne ──────────────────────── */
+.field-content {
+  float: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  clear: both;
+  box-sizing: border-box;
+}
+
+.field-content .toastui-editor-defaultUI {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* ── Correction de la typo dans le volet de prévisualisation ─────────── */
+.toastui-editor-contents {
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+  color: #1a1a1a !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+.toastui-editor-contents h1 { font-size: 1.75em !important; font-weight: 700 !important; margin: .75em 0 .4em !important; }
+.toastui-editor-contents h2 { font-size: 1.4em  !important; font-weight: 700 !important; margin: .75em 0 .4em !important; }
+.toastui-editor-contents h3 { font-size: 1.15em !important; font-weight: 600 !important; margin: .75em 0 .3em !important; }
+.toastui-editor-contents p  { margin: .6em 0 !important; }
+
+.toastui-editor-contents strong { font-weight: 700 !important; color: inherit !important; }
+.toastui-editor-contents em     { font-style: italic !important; }
+
+.toastui-editor-contents code {
+  background: #f0f0f0 !important;
+  color: #c7254e !important;
+  padding: 2px 5px !important;
+  border-radius: 3px !important;
+  font-family: "Fira Code", "Consolas", monospace !important;
+  font-size: .88em !important;
+}
+
+.toastui-editor-contents pre {
+  background: #f8f8f8 !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px !important;
+  padding: 12px 16px !important;
+  overflow-x: auto !important;
+}
+
+.toastui-editor-contents pre code {
+  background: none !important;
+  color: #333 !important;
+  padding: 0 !important;
+}
+
+.toastui-editor-contents blockquote {
+  border-left: 4px solid #d0d0d0 !important;
+  padding-left: 14px !important;
+  color: #555 !important;
+  margin: .6em 0 !important;
+  font-style: italic !important;
+}
+
+.toastui-editor-contents ul,
+.toastui-editor-contents ol { padding-left: 1.5em !important; margin: .4em 0 !important; }
+
+.toastui-editor-contents li { margin: .2em 0 !important; }
+
+.toastui-editor-contents a { color: #4f46e5 !important; text-decoration: underline !important; }
+
+.toastui-editor-contents table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: .8em 0 !important;
+}
+
+.toastui-editor-contents th,
+.toastui-editor-contents td {
+  border: 1px solid #d0d0d0 !important;
+  padding: 6px 10px !important;
+}
+
+.toastui-editor-contents th {
+  background: #f5f5f5 !important;
+  font-weight: 600 !important;
+}
+
+/* ── Contraste toolbar ───────────────────────────────────────────────── */
+.toastui-editor-toolbar {
+  background: #fafafa !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.toastui-editor-toolbar-icons {
+  color: #333 !important;
+}
+
+/* ── WYSIWYG : fond et couleur du texte saisi ────────────────────────── */
+.toastui-editor .ProseMirror {
+  color: #1a1a1a !important;
+  background: #fff !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+/* ── Mode Markdown : fond de l'éditeur CodeMirror ───────────────────── */
+.toastui-editor-md-container .CodeMirror {
+  color: #1a1a1a !important;
+  background: #fff !important;
+  font-size: 13px !important;
+  font-family: "Fira Code", "Consolas", monospace !important;
+}
+
+/* ── Séparateur entre les deux volets ───────────────────────────────── */
+.toastui-editor-md-splitter {
+  background: #d0d0d0 !important;
+}

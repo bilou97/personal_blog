@@ -1,6 +1,7 @@
 from django.contrib import admin, messages
 from django.utils import timezone
 
+from .forms import PostAdminForm
 from .models import Category, Comment, Post, Subscriber, Tag
 
 
@@ -18,6 +19,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     list_display = [
         "title", "category", "statut", "published_at", "created_at"
     ]
