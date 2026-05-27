@@ -163,7 +163,10 @@ function filterChipClass(active) {
 }
 
 onMounted(async () => {
-  dark.value = localStorage.getItem("dark") === "true";
+  const stored = localStorage.getItem("dark");
+  dark.value = stored !== null
+    ? stored === "true"
+    : window.matchMedia("(prefers-color-scheme: dark)").matches;
   applyDark();
   const [catsRes, tagsRes] = await Promise.all([
     api.get("/posts/categories"),
