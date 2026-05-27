@@ -1,10 +1,11 @@
 <template>
   <article v-if="post">
-    <img
+    <LazyImage
       v-if="post.cover_image"
       :src="post.cover_image"
       :alt="post.title"
-      class="w-full rounded-lg mb-8 object-cover max-h-72"
+      container-class="rounded-lg mb-8 max-h-72"
+      img-class="max-h-72"
     />
     <h1 class="text-3xl font-bold mb-2">{{ post.title }}</h1>
     <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-8">
@@ -122,6 +123,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute } from "vue-router";
+import LazyImage from "../components/LazyImage.vue";
 import { useHead } from "../composables/useHead";
 import { parseMarkdown } from "../composables/useMarkdown";
 import { readingTime } from "../composables/useReadingTime";
