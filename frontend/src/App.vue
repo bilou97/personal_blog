@@ -6,8 +6,17 @@
           papobilou
         </RouterLink>
 
-        <!-- Desktop auth links -->
+        <!-- Desktop nav right -->
         <div class="hidden sm:flex items-center gap-4 text-sm">
+          <RouterLink
+            to="/search"
+            title="Rechercher"
+            class="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </RouterLink>
           <template v-if="auth.isLoggedIn">
             <span class="text-gray-500 dark:text-gray-400">{{ auth.username }}</span>
             <button @click="auth.logout" class="text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">
@@ -36,8 +45,17 @@
           </button>
         </div>
 
-        <!-- Mobile: dark toggle + hamburger -->
+        <!-- Mobile: search + dark toggle + hamburger -->
         <div class="flex sm:hidden items-center gap-2">
+          <RouterLink
+            to="/search"
+            title="Rechercher"
+            class="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </RouterLink>
           <button
             @click="toggleDark"
             :title="dark ? 'Mode clair' : 'Mode sombre'"

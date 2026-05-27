@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import auth, comments, feeds, posts
+from .routers import auth, comments, feeds, posts, search
 
 app = FastAPI(
     title="Blog API",
@@ -22,3 +22,4 @@ app.include_router(posts.router, prefix="/api/posts", tags=["posts"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(comments.router, prefix="/api/posts", tags=["comments"])
 app.include_router(feeds.router, tags=["feeds"])
+app.include_router(search.router, prefix="/api/search", tags=["search"])
