@@ -1,3 +1,7 @@
+import logging
+import threading
+import time
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from django.conf import settings as django_settings
@@ -7,11 +11,32 @@ from fastapi.staticfiles import StaticFiles
 
 from .routers import auth, comments, feeds, posts, search
 
+logger = logging.getLogger(__name__)
+
+
+def _scheduler_loop() -> None:
+    from .scheduler import publish_scheduled_posts
+    while True:
+        time.sleep(60)
+        try:
+            publish_scheduled_posts()
+        except Exception:
+            logger.exception("Scheduler error")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    thread = threading.Thread(target=_scheduler_loop, daemon=True, name="post-scheduler")
+    thread.start()
+    yield
+
+
 app = FastAPI(
     title="Blog API",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

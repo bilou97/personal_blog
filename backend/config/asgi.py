@@ -16,10 +16,16 @@ _FASTAPI_PATHS = {
 
 
 async def _application(scope, receive, send):
+    if scope["type"] == "lifespan":
+        await fastapi_app(scope, receive, send)
+        return
     path = scope.get("path", "")
-    if scope["type"] == "http" and (
-        path.startswith("/api/") or path.startswith("/media/") or path in _FASTAPI_PATHS
-    ):
+    is_fastapi = (
+        path.startswith("/api/")
+        or path.startswith("/media/")
+        or path in _FASTAPI_PATHS
+    )
+    if scope["type"] == "http" and is_fastapi:
         await fastapi_app(scope, receive, send)
     else:
         await _django_app(scope, receive, send)
