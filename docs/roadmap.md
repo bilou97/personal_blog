@@ -31,12 +31,16 @@ Fonctionnalités réalisées et à venir.
 - [x] **Table des matières** — générée automatiquement depuis les titres `##` du markdown, affichée en haut d'article
 - [x] **Upload d'images** — interface d'upload dans l'admin avec redimensionnement automatique (Pillow)
 - [x] **Planification de publication** — champ `publish_at` côté admin, tâche Celery ou cron qui publie automatiquement
+- [ ] **Éditeur Markdown dans l'admin** — éditeur avec prévisualisation en temps réel (split-pane ou onglets) dans l'interface Django admin, remplace le textarea brut
 
 ### Engagement
 
 - [x] **Réactions** — 3 emojis (👍 ❤️ 🔥) sans compte requis, stockées par article + IP/session
 - [x] **Compteur de vues** — incrémenté à chaque visite d'article, affiché publiquement
-- [ ] **Newsletter** — inscription par email, envoi automatique à la publication d'un article
+- [x] **Newsletter** — inscription par email, envoi automatique à la publication d'un article (Mailpit en dev, backend SMTP configurable en prod)
+- [ ] **Nombre de commentaires sur les cartes** — afficher le nombre de commentaires approuvés directement dans la liste des articles
+- [ ] **Boutons de partage** — copie du lien, partage X (Twitter) et LinkedIn, en bas de chaque article
+- [ ] **Article épinglé / mis en avant** — possibilité de mettre un article en valeur en haut de la home (flag `pinned` côté admin)
 
 ### Distribution
 
@@ -53,6 +57,9 @@ Fonctionnalités réalisées et à venir.
 - [x] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
 - [x] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
 - [x] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
+- [ ] **Section de présentation** — bloc en haut de la home décrivant le blog, les objectifs et la démarche de l'auteur
+- [ ] **Sidebar contextuelle** — colonne latérale (home + articles) avec : archives par mois, champ de recherche, nuage de tags, articles populaires ; repliée sous le contenu sur mobile
+- [ ] **Barre de progression de lecture** — indicateur de progression en haut de l'écran lors de la lecture d'un article
 
 ### Technique
 
@@ -60,3 +67,4 @@ Fonctionnalités réalisées et à venir.
 - [x] **Prévisualisation brouillon** — lien temporaire signé permettant de voir un article non publié
 - [x] **Mode sombre** — toggle persisté dans localStorage, respecte la préférence système par défaut
 - [x] **Refresh token** — renouvellement silencieux du JWT sans déconnecter l'utilisateur
+- [x] **Docs API masquées en prod** — `/docs` et `/redoc` désactivés quand `DEBUG=False`
