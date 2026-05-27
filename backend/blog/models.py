@@ -122,6 +122,27 @@ class Subscriber(models.Model):
         return self.email
 
 
+class SiteConfig(models.Model):
+    bio_emoji = models.CharField(max_length=10, default="👋")
+    bio_title = models.CharField(max_length=200, default="Bienvenue sur papobilou")
+    bio_content = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Configuration du site"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "Configuration du site"
+
+
 class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="comments"

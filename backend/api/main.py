@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .routers import (
-    auth, comments, feeds, newsletter, posts, preview, reactions, search
+    auth, comments, config, feeds, newsletter, posts, preview, reactions, search
 )
 
 logger = logging.getLogger(__name__)
@@ -62,6 +62,7 @@ app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(reactions.router, prefix="/api/posts", tags=["reactions"])
 app.include_router(preview.router, prefix="/api/preview", tags=["preview"])
 app.include_router(newsletter.router, prefix="/api/newsletter", tags=["newsletter"])
+app.include_router(config.router, prefix="/api/config", tags=["config"])
 
 media_root = Path(django_settings.MEDIA_ROOT)
 media_root.mkdir(parents=True, exist_ok=True)

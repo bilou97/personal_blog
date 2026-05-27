@@ -1,8 +1,8 @@
 from django.contrib import admin, messages
 from django.utils import timezone
 
-from .forms import PostAdminForm
-from .models import Category, Comment, Post, Subscriber, Tag
+from .forms import PostAdminForm, SiteConfigAdminForm
+from .models import Category, Comment, Post, SiteConfig, Subscriber, Tag
 
 
 @admin.register(Category)
@@ -104,6 +104,17 @@ class SubscriberAdmin(admin.ModelAdmin):
     list_display = ["email", "created_at"]
     search_fields = ["email"]
     readonly_fields = ["created_at"]
+
+
+@admin.register(SiteConfig)
+class SiteConfigAdmin(admin.ModelAdmin):
+    form = SiteConfigAdminForm
+
+    def has_add_permission(self, request):
+        return not SiteConfig.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Comment)

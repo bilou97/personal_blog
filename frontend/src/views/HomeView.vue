@@ -1,19 +1,15 @@
 <template>
   <div>
     <!-- ── Présentation du blog ── -->
-    <div class="mb-12 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-6 sm:p-8">
+    <div v-if="siteConfig" class="mb-12 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-6 sm:p-8">
       <div class="flex items-start gap-4">
-        <div class="shrink-0 text-4xl select-none">👋</div>
+        <div class="shrink-0 text-4xl select-none">{{ siteConfig.bio_emoji }}</div>
         <div>
-          <h2 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">Bienvenue sur papobilou</h2>
-          <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-300 mb-3">
-            Je suis Stéphane, et ce blog est l'endroit où je partage mes explorations techniques,
-            mes réflexions sur le développement logiciel et les projets sur lesquels je travaille.
-          </p>
-          <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-            Vous trouverez ici des articles sur le développement web, l'architecture logicielle,
-            les outils que j'utilise au quotidien — et parfois d'autres sujets qui me tiennent à cœur.
-          </p>
+          <h2 class="text-xl font-bold mb-3 text-gray-900 dark:text-gray-100">{{ siteConfig.bio_title }}</h2>
+          <div
+            class="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300"
+            v-html="siteConfigHtml"
+          />
         </div>
       </div>
     </div>
@@ -107,6 +103,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import SubscribeForm from "../components/SubscribeForm.vue";
 import { useHead } from "../composables/useHead";
+import { parseMarkdown } from "../composables/useMarkdown";
 import api from "../api";
 
 useHead({
@@ -116,6 +113,11 @@ useHead({
 
 const route = useRoute();
 const router = useRouter();
+
+const siteConfig = ref(null);
+const siteConfigHtml = computed(() =>
+  siteConfig.value?.bio_content ? parseMarkdown(siteConfig.value.bio_content).html : ""
+);
 
 const posts = ref([]);
 const loading = ref(true);
@@ -154,8 +156,13 @@ function goTo(p) {
   router.push({ query: { ...route.query, page: p } });
 }
 
-onMounted(fetchPosts);
+onMounted(async () => {
+  const { data } = await api.get("/config");
+  siteConfig.value = data;
+  fetchPosts();
+});
 watch(() => [route.query.page, route.query.category, route.query.tag], fetchPosts);
+
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString("fr-CH");
