@@ -1,6 +1,9 @@
+import os
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from PIL import Image
 
 
 class Category(models.Model):
@@ -59,6 +62,27 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+        if self.cover_image:
+            self._resize_cover_image()
+
+    def _resize_cover_image(self, max_width=1200):
+        try:
+            path = self.cover_image.path
+            img = Image.open(path)
+            if img.width <= max_width:
+                return
+            ratio = max_width / img.width
+            img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
+            ext = os.path.splitext(path)[1].lower()
+            fmt = {".jpg": "JPEG", ".jpeg": "JPEG", ".png": "PNG", ".webp": "WEBP"}.get(ext, "JPEG")
+            if fmt == "JPEG" and img.mode in ("RGBA", "P", "LA"):
+                img = img.convert("RGB")
+            save_kw = {"format": fmt}
+            if fmt == "JPEG":
+                save_kw.update({"quality": 85, "optimize": True})
+            img.save(path, **save_kw)
+        except Exception:
+            pass
 
     def __str__(self):
         return self.title

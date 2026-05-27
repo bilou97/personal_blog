@@ -18,7 +18,7 @@ _FASTAPI_PATHS = {
 async def _application(scope, receive, send):
     path = scope.get("path", "")
     if scope["type"] == "http" and (
-        path.startswith("/api/") or path in _FASTAPI_PATHS
+        path.startswith("/api/") or path.startswith("/media/") or path in _FASTAPI_PATHS
     ):
         await fastapi_app(scope, receive, send)
     else:

@@ -1,5 +1,9 @@
+from pathlib import Path
+
+from django.conf import settings as django_settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .routers import auth, comments, feeds, posts, search
 
@@ -23,3 +27,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(comments.router, prefix="/api/posts", tags=["comments"])
 app.include_router(feeds.router, tags=["feeds"])
 app.include_router(search.router, prefix="/api/search", tags=["search"])
+
+media_root = Path(django_settings.MEDIA_ROOT)
+media_root.mkdir(parents=True, exist_ok=True)
+app.mount("/media", StaticFiles(directory=str(media_root)), name="media")
