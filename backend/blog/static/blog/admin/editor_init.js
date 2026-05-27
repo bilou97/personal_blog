@@ -33,7 +33,7 @@
         var editor = new toastui.Editor({
           el: wrapper,
           height: "600px",
-          initialEditType: "wysiwyg",
+          initialEditType: "markdown",
           previewStyle: "vertical",
           initialValue: el.value || "",
           usageStatistics: false,
