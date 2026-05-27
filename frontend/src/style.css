@@ -8,6 +8,14 @@
   }
 }
 
+/* Scrollbar invisible */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Transitions de pages */
 .fade-enter-active,
 .fade-leave-active {
