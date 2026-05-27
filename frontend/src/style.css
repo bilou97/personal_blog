@@ -12,13 +12,24 @@
   opacity: 0;
 }
 
-/* Highlight.js — thème sombre */
-.dark pre code.hljs {
-  background: #1e1e2e;
-  color: #cdd6f4;
-}
-
-/* Bouton copier dans les blocs de code */
+/* Blocs de code — highlight.js */
 .hljs-pre {
   position: relative;
+  border-radius: 0.5rem;
+  margin: 1.25rem 0;
+  overflow: auto;
+  /* Override Tailwind Typography qui force un fond sombre */
+  background: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+}
+
+.hljs-pre code.hljs {
+  display: block;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  overflow-x: auto;
 }

@@ -118,12 +118,27 @@ useHead({
   ]),
 });
 
+onMounted(async () => {
+  try {
+    const { data } = await api.get(`/posts/${route.params.slug}`);
+    post.value = data;
+  } finally {
+    loading.value = false;
+  }
+});
+
 watch(html, async () => {
+  if (!html.value) return;
   await nextTick();
-  contentRef.value?.querySelectorAll("pre.hljs-pre").forEach((pre) => {
-    if (pre.querySelector(".copy-btn")) return;
-    const code = pre.querySelector("code");
-    if (!code) return;
+  addCopyButtons();
+});
+
+function addCopyButtons() {
+  if (!contentRef.value) return;
+  contentRef.value.querySelectorAll(".hljs-pre code").forEach((code) => {
+    const pre = code.parentElement;
+    if (!pre || pre.querySelector(".copy-btn")) return;
+    pre.classList.add("relative", "group");
     const btn = document.createElement("button");
     btn.textContent = "Copier";
     btn.className =
@@ -133,19 +148,9 @@ watch(html, async () => {
       btn.textContent = "Copié !";
       setTimeout(() => { btn.textContent = "Copier"; }, 2000);
     });
-    pre.classList.add("relative", "group");
     pre.appendChild(btn);
   });
-});
-
-onMounted(async () => {
-  try {
-    const { data } = await api.get(`/posts/${route.params.slug}`);
-    post.value = data;
-  } finally {
-    loading.value = false;
-  }
-});
+}
 
 async function submitComment() {
   submitting.value = true;

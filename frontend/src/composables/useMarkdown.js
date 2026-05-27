@@ -1,6 +1,6 @@
-import { marked, Renderer } from "marked";
-import hljs from "highlight.js";
+import { Marked } from "marked";
 import DOMPurify from "dompurify";
+import hljs from "highlight.js";
 
 function slugify(text) {
   return text
@@ -12,26 +12,61 @@ function slugify(text) {
     .replace(/\s+/g, "-");
 }
 
-export function parseMarkdown(content) {
+function parseTocFromMarkdown(content) {
   const toc = [];
-
-  const renderer = new Renderer();
-
-  renderer.code = function ({ text, lang }) {
-    const language = lang && hljs.getLanguage(lang) ? lang : "plaintext";
-    const highlighted = hljs.highlight(text, { language }).value;
-    return `<pre class="hljs-pre"><code class="hljs language-${language}">${highlighted}</code></pre>`;
-  };
-
-  renderer.heading = function ({ text, depth }) {
-    if (depth === 2 || depth === 3) {
-      const id = slugify(text);
-      toc.push({ depth, text, id });
-      return `<h${depth} id="${id}">${text}</h${depth}>\n`;
+  for (const line of content.split("\n")) {
+    const match = line.match(/^(#{2,3})\s+(.+)/);
+    if (match) {
+      const depth = match[1].length;
+      const text = match[2].trim()
+        .replace(/\*\*(.+?)\*\*/g, "$1")
+        .replace(/`(.+?)`/g, "$1");
+      toc.push({ depth, text, id: slugify(text) });
     }
-    return `<h${depth}>${text}</h${depth}>\n`;
-  };
+  }
+  return toc;
+}
 
-  const html = DOMPurify.sanitize(marked.parse(content, { renderer }));
+function addHeadingIds(html) {
+  return html.replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_, depth, content) => {
+    const text = content.replace(/<[^>]+>/g, "").trim();
+    return `<h${depth} id="${slugify(text)}">${content}</h${depth}>`;
+  });
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+const marked = new Marked({
+  renderer: {
+    code(text, lang) {
+      if (typeof text !== "string") return "<pre><code></code></pre>";
+      let highlighted;
+      try {
+        if (lang && hljs.getLanguage(lang)) {
+          highlighted = hljs.highlight(text, { language: lang, ignoreIllegals: true }).value;
+        } else {
+          highlighted = escapeHtml(text);
+        }
+      } catch {
+        highlighted = escapeHtml(text);
+      }
+      const langClass = lang ? ` language-${lang}` : "";
+      return `<pre class="hljs-pre not-prose"><code class="hljs${langClass}">${highlighted}</code></pre>`;
+    },
+  },
+});
+
+export function parseMarkdown(content) {
+  const toc = parseTocFromMarkdown(content);
+
+  const rawHtml = marked.parse(content);
+  const htmlWithIds = addHeadingIds(rawHtml);
+  const html = DOMPurify.sanitize(htmlWithIds);
   return { html, toc };
 }

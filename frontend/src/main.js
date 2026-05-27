@@ -1,5 +1,5 @@
 import "./style.css";
-import "highlight.js/styles/github.css";
+import "highlight.js/styles/github-dark.css";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import App from "./App.vue";
