@@ -38,9 +38,11 @@
 
     <div
       ref="contentRef"
-      class="prose dark:prose-invert max-w-none mb-12"
+      class="prose dark:prose-invert max-w-none mb-6"
       v-html="html"
     ></div>
+
+    <ReactionBar :slug="route.params.slug" />
 
     <!-- Articles liés -->
     <section v-if="related.length" class="border-t border-gray-200 dark:border-gray-800 pt-8 mb-8">
@@ -124,6 +126,7 @@
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import LazyImage from "../components/LazyImage.vue";
+import ReactionBar from "../components/ReactionBar.vue";
 import { useHead } from "../composables/useHead";
 import { parseMarkdown } from "../composables/useMarkdown";
 import { readingTime } from "../composables/useReadingTime";

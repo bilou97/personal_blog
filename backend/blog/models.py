@@ -46,7 +46,11 @@ class Post(models.Model):
     excerpt = models.TextField(blank=True, max_length=500)
     cover_image = models.ImageField(upload_to="posts/", blank=True, null=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="posts"
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="posts",
     )
     tags = models.ManyToManyField(Tag, blank=True, related_name="posts")
     views = models.PositiveIntegerField(default=0)
@@ -72,9 +76,12 @@ class Post(models.Model):
             if img.width <= max_width:
                 return
             ratio = max_width / img.width
-            img = img.resize((max_width, int(img.height * ratio)), Image.LANCZOS)
+            img = img.resize(
+                (max_width, int(img.height * ratio)), Image.LANCZOS
+            )
             ext = os.path.splitext(path)[1].lower()
-            fmt = {".jpg": "JPEG", ".jpeg": "JPEG", ".png": "PNG", ".webp": "WEBP"}.get(ext, "JPEG")
+            fmt_map = {".jpg": "JPEG", ".jpeg": "JPEG", ".png": "PNG", ".webp": "WEBP"}
+            fmt = fmt_map.get(ext, "JPEG")
             if fmt == "JPEG" and img.mode in ("RGBA", "P", "LA"):
                 img = img.convert("RGB")
             save_kw = {"format": fmt}
@@ -88,9 +95,29 @@ class Post(models.Model):
         return self.title
 
 
+class Reaction(models.Model):
+    EMOJIS = [("like", "👍"), ("love", "❤️"), ("fire", "🔥")]
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="reactions"
+    )
+    emoji = models.CharField(max_length=10, choices=EMOJIS)
+    ip_hash = models.CharField(max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [("post", "emoji", "ip_hash")]
+
+    def __str__(self):
+        return f"{self.emoji} on {self.post.slug}"
+
+
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="comments"
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="comments"
+    )
     content = models.TextField(max_length=2000)
     approved = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

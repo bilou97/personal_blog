@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from .routers import auth, comments, feeds, posts, search
+from .routers import auth, comments, feeds, posts, reactions, search
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,9 @@ def _scheduler_loop() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    thread = threading.Thread(target=_scheduler_loop, daemon=True, name="post-scheduler")
+    thread = threading.Thread(
+        target=_scheduler_loop, daemon=True, name="post-scheduler"
+    )
     thread.start()
     yield
 
@@ -52,6 +54,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(comments.router, prefix="/api/posts", tags=["comments"])
 app.include_router(feeds.router, tags=["feeds"])
 app.include_router(search.router, prefix="/api/search", tags=["search"])
+app.include_router(reactions.router, prefix="/api/posts", tags=["reactions"])
 
 media_root = Path(django_settings.MEDIA_ROOT)
 media_root.mkdir(parents=True, exist_ok=True)
