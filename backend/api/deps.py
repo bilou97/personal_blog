@@ -71,6 +71,32 @@ def verify_preview_token(token: str) -> str:
         )
 
 
+def create_unsubscribe_token(email: str) -> str:
+    return jwt.encode(
+        {"sub": email, "type": "unsubscribe"},
+        django_settings.JWT_SECRET_KEY,
+        algorithm=django_settings.JWT_ALGORITHM,
+    )
+
+
+def verify_unsubscribe_token(token: str) -> str:
+    try:
+        payload = jwt.decode(
+            token,
+            django_settings.JWT_SECRET_KEY,
+            algorithms=[django_settings.JWT_ALGORITHM],
+            options={"verify_exp": False},
+        )
+        if payload.get("type") != "unsubscribe":
+            raise ValueError
+        return str(payload["sub"])
+    except (JWTError, KeyError, ValueError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid unsubscribe token",
+        )
+
+
 def verify_refresh_token(token: str) -> int:
     try:
         payload = jwt.decode(
@@ -93,7 +119,8 @@ def get_current_user(
 ) -> User:
     if not credentials:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
         )
     try:
         payload = jwt.decode(

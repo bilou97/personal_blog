@@ -43,6 +43,14 @@ services:
     build: ./frontend
     restart: unless-stopped
 
+  # Serveur mail local — UI sur http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   media_data:

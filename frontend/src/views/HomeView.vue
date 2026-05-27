@@ -79,12 +79,15 @@
         Suivant →
       </button>
     </nav>
+
+    <SubscribeForm />
   </div>
 </template>
 
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
+import SubscribeForm from "../components/SubscribeForm.vue";
 import { useHead } from "../composables/useHead";
 import api from "../api";
 

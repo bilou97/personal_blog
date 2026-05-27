@@ -6,6 +6,7 @@ import RegisterView from "../views/RegisterView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SearchView from "../views/SearchView.vue";
 import PreviewView from "../views/PreviewView.vue";
+import UnsubscribeView from "../views/UnsubscribeView.vue";
 
 export default createRouter({
   history: createWebHistory(),
@@ -14,6 +15,7 @@ export default createRouter({
     { path: "/post/:slug", component: PostView },
     { path: "/search", component: SearchView },
     { path: "/preview/:token", component: PreviewView },
+    { path: "/unsubscribe", component: UnsubscribeView },
     { path: "/login", component: LoginView },
     { path: "/register", component: RegisterView },
     { path: "/:pathMatch(.*)*", component: NotFoundView },
