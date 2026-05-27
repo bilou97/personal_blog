@@ -48,15 +48,15 @@ Fonctionnalités réalisées et à venir.
 - [x] **Syntax highlighting** — coloration des blocs de code dans les articles (Highlight.js), avec bouton copier
 - [x] **Transitions de pages** — animation fade entre les vues Vue Router
 - [x] **Page 404 personnalisée** — page d'erreur stylisée avec lien de retour
-- [ ] **Skeleton loaders** — placeholders animés pendant le chargement des listes et articles, à la place des spinners
-- [ ] **Typographie affinée** — choix de polices (serif pour le contenu, sans-serif pour l'UI), line-height et tailles optimisés pour la lecture longue
-- [ ] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
-- [ ] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
-- [ ] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
+- [x] **Skeleton loaders** — placeholders animés pendant le chargement des listes et articles, à la place des spinners
+- [x] **Typographie affinée** — choix de polices (serif pour le contenu, sans-serif pour l'UI), line-height et tailles optimisés pour la lecture longue
+- [x] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
+- [x] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
+- [x] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
 
 ### Technique
 
-- [ ] **Cache Redis** — mise en cache des endpoints `/api/posts` et `/api/posts/{slug}`, invalidation à la publication
+- [x] **Cache Redis** — mise en cache des endpoints `/api/posts` et `/api/posts/{slug}`, invalidation à la publication
 - [ ] **Prévisualisation brouillon** — lien temporaire signé permettant de voir un article non publié
-- [ ] **Mode sombre** — toggle persisté dans localStorage, respecte la préférence système par défaut
-- [ ] **Refresh token** — renouvellement silencieux du JWT sans déconnecter l'utilisateur
+- [x] **Mode sombre** — toggle persisté dans localStorage, respecte la préférence système par défaut
+- [x] **Refresh token** — renouvellement silencieux du JWT sans déconnecter l'utilisateur
