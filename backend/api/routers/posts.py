@@ -4,6 +4,7 @@ from django.db.models import Count, F
 from fastapi import APIRouter, HTTPException, Query
 
 from blog.models import Category, Post, Tag
+from ..cache import cache_get, cache_set
 from ..schemas.posts import (
     CategoryOut,
     PaginatedPostListOut,
@@ -13,6 +14,10 @@ from ..schemas.posts import (
 )
 
 router = APIRouter()
+
+_TTL_LIST = 300       # 5 min
+_TTL_META = 1800      # 30 min
+_TTL_RELATED = 600    # 10 min
 
 
 def _serialize_post_list(post) -> PostListOut:
@@ -50,6 +55,11 @@ def list_posts(
     category: Optional[str] = None,
     tag: Optional[str] = None,
 ):
+    key = f"posts:list:p{page}:ps{page_size}:c{category}:t{tag}"
+    cached = cache_get(key)
+    if cached:
+        return cached
+
     qs = (
         Post.objects.filter(published=True)
         .select_related("category")
@@ -63,25 +73,39 @@ def list_posts(
     total = qs.count()
     offset = (page - 1) * page_size
     results = [_serialize_post_list(p) for p in qs[offset:offset + page_size]]
-    return PaginatedPostListOut(
+    response = PaginatedPostListOut(
         total=total, page=page, page_size=page_size, results=results
     )
+    cache_set(key, response.model_dump(), _TTL_LIST)
+    return response
 
 
 @router.get("/categories", response_model=list[CategoryOut])
 def list_categories():
-    return [
+    cached = cache_get("posts:categories")
+    if cached:
+        return cached
+
+    result = [
         CategoryOut(id=c.id, name=c.name, slug=c.slug)
         for c in Category.objects.all()
     ]
+    cache_set("posts:categories", [r.model_dump() for r in result], _TTL_META)
+    return result
 
 
 @router.get("/tags", response_model=list[TagOut])
 def list_tags():
-    return [
+    cached = cache_get("posts:tags")
+    if cached:
+        return cached
+
+    result = [
         TagOut(id=t.id, name=t.name, slug=t.slug)
         for t in Tag.objects.all()
     ]
+    cache_set("posts:tags", [r.model_dump() for r in result], _TTL_META)
+    return result
 
 
 @router.get("/{slug}", response_model=PostDetailOut)
@@ -117,6 +141,11 @@ def get_post(slug: str):
 
 @router.get("/{slug}/related", response_model=list[PostListOut])
 def get_related_posts(slug: str):
+    key = f"posts:related:{slug}"
+    cached = cache_get(key)
+    if cached:
+        return cached
+
     try:
         post = Post.objects.prefetch_related("tags").get(
             slug=slug, published=True
@@ -147,4 +176,6 @@ def get_related_posts(slug: str):
         )
         related += fill
 
-    return [_serialize_post_list(p) for p in related]
+    result = [_serialize_post_list(p) for p in related]
+    cache_set(key, [r.model_dump() for r in result], _TTL_RELATED)
+    return result
