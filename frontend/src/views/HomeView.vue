@@ -1,5 +1,23 @@
 <template>
   <div>
+    <!-- ── Présentation du blog ── -->
+    <div class="mb-12 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/60 p-6 sm:p-8">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 text-4xl select-none">👋</div>
+        <div>
+          <h2 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">Bienvenue sur papobilou</h2>
+          <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-300 mb-3">
+            Je suis Stéphane, et ce blog est l'endroit où je partage mes explorations techniques,
+            mes réflexions sur le développement logiciel et les projets sur lesquels je travaille.
+          </p>
+          <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            Vous trouverez ici des articles sur le développement web, l'architecture logicielle,
+            les outils que j'utilise au quotidien — et parfois d'autres sujets qui me tiennent à cœur.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <h1 class="text-3xl font-bold mb-8">Articles</h1>
     <p v-if="!loading && !posts.length" class="text-gray-500 dark:text-gray-400">Aucun article pour l'instant.</p>
 

@@ -57,7 +57,7 @@ Fonctionnalités réalisées et à venir.
 - [x] **Lazy loading des images** — chargement différé avec placeholder flou (blur-up) pendant le chargement
 - [x] **Animations au scroll** — apparition progressive des cartes d'articles (Intersection Observer, sans librairie lourde)
 - [x] **Responsive mobile affiné** — navigation mobile (menu hamburger), lecture confortable sur petit écran
-- [ ] **Section de présentation** — bloc en haut de la home décrivant le blog, les objectifs et la démarche de l'auteur
+- [x] **Section de présentation** — bloc en haut de la home décrivant le blog, les objectifs et la démarche de l'auteur
 - [ ] **Sidebar contextuelle** — colonne latérale (home + articles) avec : archives par mois, champ de recherche, nuage de tags, articles populaires ; repliée sous le contenu sur mobile
 - [ ] **Barre de progression de lecture** — indicateur de progression en haut de l'écran lors de la lecture d'un article
 
