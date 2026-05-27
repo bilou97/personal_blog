@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.utils import timezone
 
 from .models import Category, Comment, Post, Tag
@@ -25,6 +26,7 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     filter_horizontal = ["tags"]
     readonly_fields = ["created_at", "updated_at"]
+    actions = ["generate_preview_link"]
     fieldsets = [
         (None, {"fields": ["title", "slug", "category", "tags", "cover_image"]}),
         ("Contenu", {"fields": ["excerpt", "content"]}),
@@ -44,6 +46,27 @@ class PostAdmin(admin.ModelAdmin):
             {"fields": ["created_at", "updated_at"], "classes": ["collapse"]},
         ),
     ]
+
+    @admin.action(description="Générer un lien d'aperçu (24h)")
+    def generate_preview_link(self, request, queryset):
+        if queryset.count() != 1:
+            self.message_user(
+                request,
+                "Sélectionnez un seul article pour générer un aperçu.",
+                level=messages.ERROR,
+            )
+            return
+        from api.deps import create_preview_token
+        post = queryset.first()
+        token = create_preview_token(post.slug)
+        scheme = request.scheme
+        host = request.get_host()
+        url = f"{scheme}://{host}/preview/{token}"
+        self.message_user(
+            request,
+            f"Lien d'aperçu valable 24h : {url}",
+            level=messages.SUCCESS,
+        )
 
     @admin.display(description="Statut")
     def statut(self, obj):

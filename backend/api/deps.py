@@ -42,6 +42,35 @@ def create_refresh_token(user_id: int) -> str:
     )
 
 
+_PREVIEW_TTL_HOURS = 24
+
+
+def create_preview_token(slug: str) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(hours=_PREVIEW_TTL_HOURS)
+    return jwt.encode(
+        {"sub": slug, "exp": expire, "type": "preview"},
+        django_settings.JWT_SECRET_KEY,
+        algorithm=django_settings.JWT_ALGORITHM,
+    )
+
+
+def verify_preview_token(token: str) -> str:
+    try:
+        payload = jwt.decode(
+            token,
+            django_settings.JWT_SECRET_KEY,
+            algorithms=[django_settings.JWT_ALGORITHM],
+        )
+        if payload.get("type") != "preview":
+            raise ValueError
+        return str(payload["sub"])
+    except (JWTError, KeyError, ValueError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired preview token",
+        )
+
+
 def verify_refresh_token(token: str) -> int:
     try:
         payload = jwt.decode(
