@@ -24,7 +24,13 @@
         </div>
       </template>
 
-      <article v-else v-for="post in posts" :key="post.id" class="border-b border-gray-200 dark:border-gray-800 pb-8">
+      <article
+        v-else
+        v-for="(post, index) in posts"
+        :key="post.id"
+        v-reveal="{ delay: index * 60 }"
+        class="border-b border-gray-200 dark:border-gray-800 pb-8"
+      >
         <RouterLink :to="`/post/${post.slug}`" class="group block mb-2">
           <h2 class="text-xl font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
             {{ post.title }}
